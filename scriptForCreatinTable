@@ -1,0 +1,10 @@
+CREATE TABLE public."landingpage"
+(
+  id SERIAL,
+  name text NOT NULL,
+  secondname text,
+  email text,
+  remarks text,
+  cv text,
+  CONSTRAINT "landingPage_pkey" PRIMARY KEY (id, name)
+)

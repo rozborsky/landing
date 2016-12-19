@@ -42,7 +42,11 @@
                             <form:errors path="remarks" id="error"/>
                         </td>
                     </tr>
+                    <tr>
+                        <td>upload cv</td>
+                        <td><input type="file" name="cv" accept=".doc, .docx, .pdf"/></td>
 
+                    </tr>
                     <tr>
                         <td></td>
                         <td><input type="submit" value="registration"/></td>
