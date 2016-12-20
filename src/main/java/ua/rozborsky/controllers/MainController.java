@@ -39,7 +39,6 @@ public class MainController {
     public String confirmation(@RequestParam("cv") MultipartFile file,
                                @Valid @ModelAttribute("employee") EmployeeImpl employee, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            System.out.println(bindingResult.toString());
             return "registration";
         }
 
@@ -47,6 +46,9 @@ public class MainController {
 
         dao.addEmployee(employee.getName(), employee.getSecondName(), employee.geteMail(),
                 employee.getRemarks(), file.getOriginalFilename());
+
+        sendLetter.setParameters("adress@gmail.com", "pass", "goal@gmail.com", "sub");
+        sendLetter.send();
 
         return "confirmation";
     }
