@@ -27,8 +27,6 @@ public class EmployeeImpl implements Employee{
 
     private String remarks;
 
-    //private String cv;
-
 
     public String getName() {
         return name;
@@ -61,12 +59,4 @@ public class EmployeeImpl implements Employee{
     public void setRemarks(String remarks) {
         this.remarks = remarks;
     }
-
-//    public String getCv() {
-//        return cv;
-//    }
-//
-//    public void setCv(String cv) {
-//        this.cv = cv;
-//    }
 }

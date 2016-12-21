@@ -31,7 +31,7 @@ public class SendLetter {
         this.subject += name;
     }
 
-    public void send(String remarks, String cvName){
+    public void send(String remarks, String cvName, String dirPath){
 
         Properties props = new Properties();
         props.put("mail.smtp.host", "smtp.gmail.com");
@@ -62,7 +62,7 @@ public class SendLetter {
 
 
             BodyPart cv = new MimeBodyPart();
-            DataSource dataSource = new FileDataSource("C:/Users/roman/IdeaProjects/landing/cv/" + cvName);
+            DataSource dataSource = new FileDataSource(dirPath + cvName);
             cv.setDataHandler(new DataHandler(dataSource));
             cv.setFileName(cvName);
 

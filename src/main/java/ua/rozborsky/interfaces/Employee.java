@@ -20,8 +20,4 @@ public interface Employee {
     String getRemarks();
 
     void setRemarks(String remarks);
-
-//    String getCv();
-//
-//    void setCv(String cv);
 }

@@ -14,65 +14,14 @@ import java.io.IOException;
 @Component
 public class CvManager {
 
-    final String DIR_WITH_IMAGES = "C:/Users/roman/IdeaProjects/landing/cv/";
-
-
-    public void saveImage(MultipartFile image)
+    public void saveImage(MultipartFile image, String dirPath)
             throws RuntimeException{
         try{
-            File file = new File(DIR_WITH_IMAGES + image.getOriginalFilename());
+            System.out.println(dirPath + image.getOriginalFilename());
+            File file = new File(dirPath + image.getOriginalFilename());
             FileUtils.writeByteArrayToFile(file, image.getBytes());
         } catch (IOException exception) {
             throw new RuntimeException();
         }
-
-
-
-
-//
-//
-//        try {
-//            UploadItem uploadItem
-//            MultipartFile file = uploadItem.getFileData();
-//            String fileName = null;
-//            InputStream inputStream = null;
-//            OutputStream outputStream = null;
-//            if (file.getSize() > 0) {
-//                inputStream = file.getInputStream();
-//                if (file.getSize() > 10000) {
-//                    System.out.println("File Size:::" + file.getSize());
-//                    return "/uploadfile";
-//                }
-//                System.out.println("size::" + file.getSize());
-//                fileName = request.getRealPath("") + "/images/"
-//                        + file.getOriginalFilename();
-//                outputStream = new FileOutputStream(fileName);
-//                System.out.println("fileName:" + file.getOriginalFilename());
-//
-//                int readBytes = 0;
-//                byte[] buffer = new byte[10000];
-//                while ((readBytes = inputStream.read(buffer, 0, 10000)) != -1) {
-//                    outputStream.write(buffer, 0, readBytes);
-//                }
-//                outputStream.close();
-//                inputStream.close();
-//            }
-//
-//            // ..........................................
-//            session.setAttribute("uploadFile", file.getOriginalFilename());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-
-
-
-
-
-
-
-
-
-
-
     }
 }

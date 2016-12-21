@@ -15,6 +15,7 @@ import ua.rozborsky.classes.EmployeeImpl;
 import ua.rozborsky.classes.SendLetter;
 
 import javax.validation.Valid;
+import java.io.File;
 
 
 /**
@@ -33,9 +34,12 @@ public class MainController {
     @Autowired
     private DAOPostgress dao;
 
+    private String dirPath = getPathToCv();
+
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String registration(Model model) {
         model.addAttribute("employee", new EmployeeImpl());
+
         return "registration";
     }
 
@@ -47,16 +51,22 @@ public class MainController {
         }
 
         dao.DAOPostgresss("jdbc:postgresql://localhost:5439/web", "postgres", "postgres");
-
         dao.addEmployee(employee.getName(), employee.getSecondName(), employee.geteMail(),
                 employee.getRemarks(), file.getOriginalFilename());
 
-        cvManager.saveImage(file);
 
-        sendLetter.setParameters("@gmail.com", "", "@gmail.com",
+        cvManager.saveImage(file, dirPath);
+
+        sendLetter.setParameters("rozborsky.test.page@gmail.com", "spongebobsquarepants", "roman.rozborsky@gmail.com",
                 employee.getSecondName() + "_" + employee.getName());
-        sendLetter.send(employee.getRemarks(), file.getOriginalFilename());
+        sendLetter.send(employee.getRemarks(), file.getOriginalFilename(), dirPath);
 
         return "confirmation";
+    }
+
+    public String getPathToCv() {
+        File file = new File("");
+
+        return file.getAbsolutePath() + "\\cv\\";
     }
 }
