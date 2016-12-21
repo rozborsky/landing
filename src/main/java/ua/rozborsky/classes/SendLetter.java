@@ -19,19 +19,19 @@ import java.util.Properties;
 @Component
 public class SendLetter {
 
-    private String adress;
-    private String goalAdress;
+    private String address;
+    private String goalAddress;
     private String subject = "CV ";
     private String password;
 
-    public void setParameters(String adress, String password, String goalAdress, String name) {
-        this.adress = adress;
+    public void setParameters(String adress, String password, String goalAddress, String name) {
+        this.address = adress;
         this.password = password;
-        this.goalAdress = goalAdress;
+        this.goalAddress = goalAddress;
         this.subject += name;
     }
 
-    public void send(String remarks){
+    public void send(String remarks, String cvName){
 
         Properties props = new Properties();
         props.put("mail.smtp.host", "smtp.gmail.com");
@@ -44,14 +44,14 @@ public class SendLetter {
         Session session = Session.getDefaultInstance(props,
                 new javax.mail.Authenticator() {
                     protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(adress, password);
+                        return new PasswordAuthentication(address, password);
                     }
                 });
 
         try {
             Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(adress));
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(goalAdress));
+            message.setFrom(new InternetAddress(address));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(goalAddress));
             message.setSubject(subject);
 
             BodyPart text = new MimeBodyPart();
@@ -62,9 +62,9 @@ public class SendLetter {
 
 
             BodyPart cv = new MimeBodyPart();
-            DataSource dataSource = new FileDataSource("D:/Rozborsky.pdf");
+            DataSource dataSource = new FileDataSource("C:/Users/roman/IdeaProjects/landing/cv/" + cvName);
             cv.setDataHandler(new DataHandler(dataSource));
-            cv.setFileName("D:/Rozborsky.pdf");
+            cv.setFileName(cvName);
 
             multipart.addBodyPart(cv);
 

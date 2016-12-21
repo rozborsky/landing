@@ -1,6 +1,7 @@
 package ua.rozborsky.classes;
 
 import org.apache.commons.io.FileUtils;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -9,20 +10,17 @@ import java.io.IOException;
 /**
  * Created by roman on 19.12.2016.
  */
+
+@Component
 public class CvManager {
 
-    final String DIR_WITH_IMAGES = "C:/Users/roman/IdeaProjects/landingPage/src/main/java/ua/rozborskyRoman/images/";
+    final String DIR_WITH_IMAGES = "C:/Users/roman/IdeaProjects/landing/cv/";
 
-    public void validateImage(MultipartFile image) {
-        if (!image.getContentType().equals("image/jpeg")) {
-            throw new RuntimeException();
-        }
-    }
 
-    public void saveImage(String fileName, MultipartFile image)
+    public void saveImage(MultipartFile image)
             throws RuntimeException{
         try{
-            File file = new File(DIR_WITH_IMAGES + fileName);
+            File file = new File(DIR_WITH_IMAGES + image.getOriginalFilename());
             FileUtils.writeByteArrayToFile(file, image.getBytes());
         } catch (IOException exception) {
             throw new RuntimeException();

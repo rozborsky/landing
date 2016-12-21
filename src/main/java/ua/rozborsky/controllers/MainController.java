@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import ua.rozborsky.classes.CvManager;
 import ua.rozborsky.classes.DAOPostgress;
 import ua.rozborsky.classes.EmployeeImpl;
 import ua.rozborsky.classes.SendLetter;
@@ -22,6 +23,9 @@ import javax.validation.Valid;
 
 @Controller
 public class MainController {
+
+    @Autowired
+    CvManager cvManager;
 
     @Autowired
     private SendLetter sendLetter;
@@ -47,9 +51,11 @@ public class MainController {
         dao.addEmployee(employee.getName(), employee.getSecondName(), employee.geteMail(),
                 employee.getRemarks(), file.getOriginalFilename());
 
+        cvManager.saveImage(file);
+
         sendLetter.setParameters("@gmail.com", "", "@gmail.com",
                 employee.getSecondName() + "_" + employee.getName());
-        sendLetter.send(employee.getRemarks());
+        sendLetter.send(employee.getRemarks(), file.getOriginalFilename());
 
         return "confirmation";
     }
