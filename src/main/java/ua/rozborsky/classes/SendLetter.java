@@ -21,26 +21,28 @@ public class SendLetter {
 
     private String adress;
     private String goalAdress;
-    private String subject;
+    private String subject = "CV ";
     private String password;
 
-    public void setParameters(String adress, String password, String goalAdress, String subject) {
+    public void setParameters(String adress, String password, String goalAdress, String name) {
         this.adress = adress;
         this.password = password;
         this.goalAdress = goalAdress;
-        this.subject = subject;
+        this.subject += name;
     }
 
-    public void send(){
+    public void send(String remarks){
 
         Properties props = new Properties();
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
         props.put("mail.smtp.host", "smtp.gmail.com");
-        props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.socketFactory.port", "465");
+        props.put("mail.smtp.socketFactory.class",
+                "javax.net.ssl.SSLSocketFactory");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.port", "465");
 
-        Session session = Session.getInstance(props,
-                new Authenticator() {
+        Session session = Session.getDefaultInstance(props,
+                new javax.mail.Authenticator() {
                     protected PasswordAuthentication getPasswordAuthentication() {
                         return new PasswordAuthentication(adress, password);
                     }
@@ -48,31 +50,28 @@ public class SendLetter {
 
         try {
             Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(adress));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(goalAdress));
             message.setSubject(subject);
-            message.setText(setMessage());
-            message.setContent(addImage());
 
+            BodyPart text = new MimeBodyPart();
+            text.setText(remarks);
+
+            Multipart multipart = new MimeMultipart();
+            multipart.addBodyPart(text);
+
+
+            BodyPart cv = new MimeBodyPart();
+            DataSource dataSource = new FileDataSource("D:/Rozborsky.pdf");
+            cv.setDataHandler(new DataHandler(dataSource));
+            cv.setFileName("D:/Rozborsky.pdf");
+
+            multipart.addBodyPart(cv);
+
+            message.setContent(multipart);
             Transport.send(message);
         } catch (MessagingException e) {
            e.printStackTrace();
         }
-    }
-
-    private static MimeMultipart addImage() throws MessagingException {
-        MimeMultipart multipart = new MimeMultipart();
-        BodyPart messageBodyPart = new MimeBodyPart();
-        DataSource dataSource = new FileDataSource(chooseImage());
-        messageBodyPart.setDataHandler(new DataHandler(dataSource));
-        multipart.addBodyPart(messageBodyPart);
-        return multipart;
-    }
-
-    private static String chooseImage() {
-        return "D:/Rozborsky.pdf";
-    } //D:/images/.......jpg
-
-    private static String setMessage() {
-        return "message";
     }
 }

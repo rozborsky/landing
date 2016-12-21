@@ -47,8 +47,9 @@ public class MainController {
         dao.addEmployee(employee.getName(), employee.getSecondName(), employee.geteMail(),
                 employee.getRemarks(), file.getOriginalFilename());
 
-        sendLetter.setParameters("adress@gmail.com", "pass", "goal@gmail.com", "sub");
-        sendLetter.send();
+        sendLetter.setParameters("@gmail.com", "", "@gmail.com",
+                employee.getSecondName() + "_" + employee.getName());
+        sendLetter.send(employee.getRemarks());
 
         return "confirmation";
     }
