@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 import org.sql2o.Connection;
 import org.sql2o.Sql2o;
 import org.sql2o.Sql2oException;
+import ua.rozborsky.exceptions.LandingException;
 import ua.rozborsky.interfaces.DAO;
 
 /**
@@ -24,7 +25,7 @@ public class DAOPostgress implements DAO{
     }
 
     @Override
-    public void addEmployee(String name, String secondName, String eMail, String remarks, String cv) {
+    public void addEmployee(String name, String secondName, String eMail, String remarks, String cv) throws LandingException{
         Sql2o sql2o = new Sql2o(host, user, password);
         System.out.println(sql2o.toString());
         String sql =
@@ -33,15 +34,14 @@ public class DAOPostgress implements DAO{
 
         try (Connection con = sql2o.open()) {
             con.createQuery(sql)
-                    .addParameter("name", name)
-                    .addParameter("secondname", secondName)
-                    .addParameter("email", eMail)
-                    .addParameter("remarks", remarks)
-                    .addParameter("cv", cv)
-                    .executeUpdate();
+                .addParameter("name", name)
+                .addParameter("secondname", secondName)
+                .addParameter("email", eMail)
+                .addParameter("remarks", remarks)
+                .addParameter("cv", cv)
+                .executeUpdate();
         }catch (Sql2oException e) {
-            System.out.println("--------------------------------");
-            e.getStackTrace();
+            throw new LandingException();
         }
     }
 }

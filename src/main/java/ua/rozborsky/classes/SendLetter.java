@@ -5,6 +5,7 @@ package ua.rozborsky.classes;
  */
 
 import org.springframework.stereotype.Component;
+import ua.rozborsky.exceptions.LandingException;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -31,7 +32,7 @@ public class SendLetter {
         this.subject += name;
     }
 
-    public void send(String remarks, String cvName, String dirPath){
+    public void send(String remarks, String cvName, String dirPath) throws LandingException {
 
         Properties props = new Properties();
         props.put("mail.smtp.host", "smtp.gmail.com");
@@ -71,7 +72,7 @@ public class SendLetter {
             message.setContent(multipart);
             Transport.send(message);
         } catch (MessagingException e) {
-           e.printStackTrace();
+           throw new LandingException();
         }
     }
 }

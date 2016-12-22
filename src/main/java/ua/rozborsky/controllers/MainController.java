@@ -13,6 +13,7 @@ import ua.rozborsky.classes.CvManager;
 import ua.rozborsky.classes.DAOPostgress;
 import ua.rozborsky.classes.EmployeeImpl;
 import ua.rozborsky.classes.SendLetter;
+import ua.rozborsky.exceptions.LandingException;
 
 import javax.validation.Valid;
 import java.io.File;
@@ -40,26 +41,30 @@ public class MainController {
     public String registration(Model model) {
         model.addAttribute("employee", new EmployeeImpl());
 
-        return "registration";
+        return "landingPage";
     }
 
     @RequestMapping(value = "/confirmation", method = RequestMethod.POST)
     public String confirmation(@RequestParam("cv") MultipartFile file,
                                @Valid @ModelAttribute("employee") EmployeeImpl employee, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "registration";
+            return "landingPage";
         }
 
         dao.DAOPostgresss("jdbc:postgresql://localhost:5439/web", "postgres", "postgres");
-        dao.addEmployee(employee.getName(), employee.getSecondName(), employee.geteMail(),
-                employee.getRemarks(), file.getOriginalFilename());
+        try {
+            dao.addEmployee(employee.getName(), employee.getSecondName(), employee.geteMail(),
+                    employee.getRemarks(), file.getOriginalFilename());
 
 
-        cvManager.saveImage(file, dirPath);
+            cvManager.saveCV(file, dirPath);
 
-        sendLetter.setParameters("rozborsky.test.page@gmail.com", "spongebobsquarepants", "roman.rozborsky@gmail.com",
-                employee.getSecondName() + "_" + employee.getName());
-        sendLetter.send(employee.getRemarks(), file.getOriginalFilename(), dirPath);
+            sendLetter.setParameters("@gmail.com", "", "@gmail.com",            //address, password, goalAddress
+                    employee.getSecondName() + "_" + employee.getName());
+            sendLetter.send(employee.getRemarks(), file.getOriginalFilename(), dirPath);
+        } catch (LandingException e) {
+            return "errorPage";
+        }
 
         return "confirmation";
     }

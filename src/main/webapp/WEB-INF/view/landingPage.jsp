@@ -10,7 +10,7 @@
 	</head>
 
 	<body>
-        <h1 class="startH1">first</h1>
+        <h1 class="startH1">landing page</h1>
         <div class="logForm">
             <form:form action="confirmation" modelAttribute="employee" enctype="multipart/form-data" method="post">
                 <table>
